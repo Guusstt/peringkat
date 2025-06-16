@@ -106,12 +106,8 @@ def kirim_telegram(pesan):
 def main():
     data = ambil_data_perangkingan()
 
-    if data is None:
-        print("🚫 Proses dihentikan karena gagal mengambil data.")
-        return
-
     if not data:
-        print("ℹ️ Data peringkat dari API kosong. Mungkin belum ada pendaftar.")
+        print("🚫 Data tidak tersedia atau gagal diambil.")
         return
 
     peringkat_baru = cari_peringkat(data, NAMA)
@@ -120,27 +116,25 @@ def main():
         return
 
     peringkat_lama = baca_peringkat_terakhir()
-    if peringkat_lama is None or peringkat_lama != peringkat_baru:
-        perubahan = f"Dari: {peringkat_lama if peringkat_lama else 'Belum tercatat'} ➡️ Ke: <b>{peringkat_baru}</b>"
+
+    # Kirim notifikasi hanya jika peringkat berubah
+    if peringkat_lama != peringkat_baru:
+        perubahan = f"Dari: {peringkat_lama if peringkat_lama else 'Belum tercatat'} ➡️ <b>{peringkat_baru}</b>"
         if peringkat_lama:
             selisih = peringkat_lama - peringkat_baru
             if selisih > 0:
-                perubahan += f" (Naik {selisih} Peringkat 📈)"
+                perubahan += f" (Naik {selisih} 📈)"
             elif selisih < 0:
-                perubahan += f" (Turun {abs(selisih)} Peringkat 📉)"
+                perubahan += f" (Turun {abs(selisih)} 📉)"
 
         pesan = (
-            f"📢 <b>UPDATE PERINGKAT PPDB</b> 📢\n\n"
+            f"📢 <b>UPDATE PERINGKAT PPDB</b>\n\n"
             f"👤 <b>Nama:</b> {NAMA}\n"
             f"📊 <b>Peringkat:</b> {perubahan}\n"
-            f"📅 Update via API Jateng"
+            f"📅 Update otomatis dari sistem PPDB Jateng"
         )
         kirim_telegram(pesan)
         simpan_peringkat(peringkat_baru)
     else:
         print(
             f"ℹ️ Tidak ada perubahan peringkat. Tetap di posisi {peringkat_baru}.")
-
-
-if __name__ == "__main__":
-    main()
