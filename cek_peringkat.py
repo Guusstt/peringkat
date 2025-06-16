@@ -1,4 +1,6 @@
 import requests
+import os
+from http.cookies import SimpleCookie
 
 # --- KONFIGURASI ---
 NAMA = "SALSABILA BRILLIANA AZZA RAMADHANI"
@@ -6,14 +8,14 @@ SEKOLAH_ID = 1349
 JALUR_ID = "1"
 
 # --- TELEGRAM & FILE ---
-TELEGRAM_TOKEN = "7934112776:AAHpxxqldO5trY4Dncvs8hmI8nDHA9zzuNU"
-TELEGRAM_CHAT_ID = "1347758592"
+TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 FILE_PENYIMPANAN = "peringkat_terakhir.txt"
 ENDPOINT = "https://api-spmb.jatengprov.go.id/api/servis/perangkingan"
 
 # --- API KEY & CSRF Token ---
-API_KEY = "e86087bd-d805-407e-8e1d-a56c96490545"
-CSRF_TOKEN = "dN6soihF-GRw6JYWjrw5118b9yvlHS75_WqQ"
+API_KEY = os.environ["API_KEY"]
+CSRF_TOKEN = os.environ["CSRF_TOKEN"]
 
 # --- HEADERS ---
 HEADERS = {
@@ -26,15 +28,10 @@ HEADERS = {
 }
 
 # --- COOKIES ---
-COOKIES = {
-    "_ga": "GA1.1.164135517.1748193783",
-    "acw_tc": "a3b5649c17500745659437650e572bcd75f5ba0251be34b98b12a12a82",
-    "cdn_sec_tc": "a3b5649c17500745659437650e572bcd75f5ba0251be34b98b12a12a82",
-    "_csrf": "462HMcMHtwuO6xh4_y_6wcos",
-    "SERVERID": "f8c3467980c546f6f56b0b3eb1ae47f5|1750074751|1750074565",
-    "SERVERCORSID": "f8c3467980c546f6f56b0b3eb1ae47f5|1750074751|1750074565",
-    "_ga_6JGZQLQ77R": "GS2.1.s1750074559$o24$g1$t1750074749$j59$l0$h0"
-}
+cookie_raw = os.environ["COOKIES"]
+simple_cookie = SimpleCookie()
+simple_cookie.load(cookie_raw)
+COOKIES = {key: morsel.value for key, morsel in simple_cookie.items()}
 
 # --- PAYLOAD ---
 PAYLOAD = {
