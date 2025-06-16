@@ -1,0 +1,31 @@
+name: Cek Peringkat PPDB
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # setiap 30 menit
+  workflow_dispatch: # bisa dijalankan manual juga
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Jalankan Skrip PPDB
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          API_KEY: ${{ secrets.API_KEY }}
+          CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
+          COOKIES: ${{ secrets.COOKIES }}
+        run: python main.py
